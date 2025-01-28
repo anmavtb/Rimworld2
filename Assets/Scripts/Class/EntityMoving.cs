@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 
 public class EntityMoving : Entity
 {
@@ -14,7 +15,7 @@ public class EntityMoving : Entity
     [SerializeField] protected float gestationDuration = 1;
     [SerializeField] protected float growthSpeed = 1;
     [SerializeField] protected List<GameObject> healthPanel;
-    [SerializeField] protected Dictionary<EntityObject, int> inventory;
+    [SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> inventory;
 
     public string Species => species;
     public float Age => age;
@@ -27,5 +28,13 @@ public class EntityMoving : Entity
     public float GestationDuration => gestationDuration;
     public float GrowthSpeed => growthSpeed;
     public List<GameObject> HealthPanel => healthPanel;
-    public Dictionary<EntityObject, int> Inventory => inventory;
+    public SerializedDictionary<EntityObject, int> Inventory => inventory;
+
+    protected void Attack(GenericObject _target)
+    {
+        float _random = (Random.value * Random.Range(-1f, 1f)) * 10;
+        float _finalDamages = baseDamage + _random;
+        Debug.Log($"random : {_random} | baseDamage : {baseDamage} | finalDamage : {_finalDamages}");
+        _target.IsHit(_finalDamages);
+    }
 }
