@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5333496505801511233}
   - component: {fileID: 8493106024612511123}
   - component: {fileID: 9013001451136845579}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,6 +122,8 @@ MonoBehaviour:
   description: 
   hitPoints: 100
   isPlayerOwned: 0
+  drops:
+    _serializedList: []
   value: 1
   maxTemp: 0
   minTemp: 0
@@ -140,9 +142,13 @@ MonoBehaviour:
   gestationDuration: 1
   growthSpeed: 1
   healthPanel: []
+  inventory:
+    _serializedList: []
   surname: 
   nickname: 
   hapiness: 1
   thoughts: []
   skills: []
   traits: []
+  ATTACK: 0
+  TARGET: {fileID: 0}

@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
-using UnityEngine.UIElements;
 
 public class GenericObject : MonoBehaviour
 {
@@ -9,7 +7,7 @@ public class GenericObject : MonoBehaviour
     [SerializeField] protected string description;
     [SerializeField] protected float hitPoints = 1;
     [SerializeField] protected bool isPlayerOwned = false;
-    [SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> drops;
+    [SerializeField][SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> drops;
     [SerializeField] protected float value = 1;
     [SerializeField] protected float maxTemp;
     [SerializeField] protected float minTemp;

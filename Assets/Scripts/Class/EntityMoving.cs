@@ -15,7 +15,7 @@ public class EntityMoving : Entity
     [SerializeField] protected float gestationDuration = 1;
     [SerializeField] protected float growthSpeed = 1;
     [SerializeField] protected List<GameObject> healthPanel;
-    [SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> inventory;
+    [SerializeField][SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> inventory;
 
     public string Species => species;
     public float Age => age;

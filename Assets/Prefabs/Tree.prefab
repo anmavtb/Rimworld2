@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1598753076170567302}
   - component: {fileID: 1778545430356827104}
   - component: {fileID: 4097436496531115211}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,6 +124,10 @@ MonoBehaviour:
   description: 
   hitPoints: 50
   isPlayerOwned: 0
+  drops:
+    _serializedList:
+    - Key: {fileID: 3314068729654352829, guid: 84e2034b004ad534cbab0a7b8443f829, type: 3}
+      Value: 3
   value: 1
   maxTemp: 0
   minTemp: 0
