@@ -42,7 +42,25 @@ public class ControlsManager : Singleton<ControlsManager>
     {
         if (currentObjectSelected is EntityMoving && currentObjectSelected.IsPlayerOwned)
         {
-            Debug.Log("Good");
+            EntityMoving _currentObjectSelected = currentObjectSelected as EntityMoving;
+            bool _hit = Physics.Raycast(ray, out RaycastHit _result, detectionDistance, objectMask);
+            if (!_hit) return;
+            if (_result.transform.GetComponent<GenericObject>())
+            {
+                GenericObject _objectHit = _result.transform.GetComponent<GenericObject>();
+                Debug.Log($"selected : {_currentObjectSelected.ObjectName} | hit : {_objectHit.ObjectName}");
+                if (!(_objectHit.ObjectName == _currentObjectSelected.ObjectName))
+                {
+                }
+                else
+                {
+                    Debug.Log("SAME");
+                }
+            }
+            else
+            {
+                _currentObjectSelected.Move(_result.point);
+            }
         }
     }
 

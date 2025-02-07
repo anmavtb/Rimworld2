@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using UnityEngine.AI;
 
 public class EntityMoving : Entity
 {
@@ -17,6 +18,8 @@ public class EntityMoving : Entity
     [SerializeField] protected List<GameObject> healthPanel;
     [SerializeField][SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> inventory;
 
+    [SerializeField] protected NavMeshAgent agent;
+
     public string Species => species;
     public float Age => age;
     public float Speed => speed;
@@ -29,6 +32,11 @@ public class EntityMoving : Entity
     public float GrowthSpeed => growthSpeed;
     public List<GameObject> HealthPanel => healthPanel;
     public SerializedDictionary<EntityObject, int> Inventory => inventory;
+
+    public void Move(Vector3 _destination)
+    {
+        agent.SetDestination(_destination);
+    }
 
     protected void Attack(GenericObject _target)
     {
