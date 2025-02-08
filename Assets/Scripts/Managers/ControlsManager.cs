@@ -45,21 +45,33 @@ public class ControlsManager : Singleton<ControlsManager>
             EntityMoving _currentObjectSelected = currentObjectSelected as EntityMoving;
             bool _hit = Physics.Raycast(ray, out RaycastHit _result, detectionDistance, objectMask);
             if (!_hit) return;
-            if (_result.transform.GetComponent<GenericObject>())
+            switch (_result.transform.GetComponent<GenericObject>())
             {
-                GenericObject _objectHit = _result.transform.GetComponent<GenericObject>();
-                Debug.Log($"selected : {_currentObjectSelected.ObjectName} | hit : {_objectHit.ObjectName}");
-                if (!(_objectHit.ObjectName == _currentObjectSelected.ObjectName))
-                {
-                }
-                else
-                {
-                    Debug.Log("SAME");
-                }
-            }
-            else
-            {
-                _currentObjectSelected.Move(_result.point);
+                case Plant:
+                    Plant _plantHit = _result.transform.GetComponent<Plant>();
+                    Debug.Log($"Plant {_plantHit}");
+                    _currentObjectSelected.Attack(_plantHit);
+                    break;
+                case EntityMoving:
+                    EntityMoving _entityHit = _result.transform.GetComponent<EntityMoving>();
+                    Debug.Log($"Entité : {_entityHit}");
+                    if (!(_entityHit.ObjectName == currentObjectSelected.ObjectName))
+                    {
+                        _currentObjectSelected.Attack(_entityHit);
+                    }
+                    else
+                    {
+                        Debug.Log("SELF");
+                    }
+                    break;
+                case GenericObject:
+                    GenericObject _objectHit = _result.transform.GetComponent<GenericObject>();
+                    print($"Objet : {_objectHit}");
+                    break;
+                default:
+                    Debug.Log("Rien");
+                    StartCoroutine(_currentObjectSelected.Move(_result.point));
+                    break;
             }
         }
     }

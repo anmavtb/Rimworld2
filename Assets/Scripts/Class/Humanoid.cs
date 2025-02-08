@@ -10,9 +10,6 @@ public class Humanoid : EntityMoving
     [SerializeField] protected List<GameObject> skills;
     [SerializeField] protected List<GameObject> traits;
 
-    [SerializeField] private bool ATTACK = false;
-    [SerializeField] private GenericObject TARGET;
-
     public string Surname => surname;
     public string Nickname => nickname;
     public float Hapiness => hapiness;
@@ -21,10 +18,4 @@ public class Humanoid : EntityMoving
     public List<GameObject> Traits => traits;
 
     public string FullName => $"{objectName} \"{nickname}\" {surname}";
-
-    private void Update()
-    {
-        if (TARGET != null && ATTACK == true)
-            Attack(TARGET);
-    }
 }

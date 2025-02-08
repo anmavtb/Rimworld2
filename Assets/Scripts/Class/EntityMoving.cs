@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine.AI;
+using System.Collections;
 
 public class EntityMoving : Entity
 {
@@ -33,16 +34,60 @@ public class EntityMoving : Entity
     public List<GameObject> HealthPanel => healthPanel;
     public SerializedDictionary<EntityObject, int> Inventory => inventory;
 
-    public void Move(Vector3 _destination)
+    protected void Start()
     {
-        agent.SetDestination(_destination);
+        Init();
     }
 
-    protected void Attack(GenericObject _target)
+    protected void Init()
     {
-        float _random = (Random.value * Random.Range(-1f, 1f)) * 10;
-        float _finalDamages = baseDamage + _random;
-        Debug.Log($"random : {_random} | baseDamage : {baseDamage} | finalDamage : {_finalDamages}");
-        _target.IsHit(_finalDamages);
+        agent = GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = size;
+    }
+
+    public IEnumerator Move(Vector3 _destination)
+    {
+        agent.SetDestination(_destination);
+        Debug.Log(1);
+        Debug.Log($"pos : {this.transform.position} | dest : {agent.pathEndPosition} | stopdist : {agent.stoppingDistance}");
+        if (!agent.pathPending && DestinationReached(agent, _destination)) yield return new WaitForSeconds(10f);
+    }
+
+    protected bool DestinationReached(NavMeshAgent _agent, Vector3 _destination)
+    {
+        Debug.Log(2);
+        Debug.Log($"pos : {this.transform.position} | dest : {agent.pathEndPosition} | stopdist : {agent.stoppingDistance}");
+        if (agent.pathPending)
+        {
+            return Vector3.Distance(this.transform.position, agent.pathEndPosition) <= agent.stoppingDistance;
+        }
+        else
+        {
+            return (agent.remainingDistance <= agent.stoppingDistance);
+        }
+    }
+
+    public void Attack(GenericObject _target)
+    {
+        if (HasReach(this.transform.position, _target.transform.position))
+        {
+            float _random = (Random.value * Random.Range(-1f, 1f)) * 10;
+            float _finalDamages = baseDamage + _random;
+            Debug.Log($"random : {_random} | baseDamage : {baseDamage} | finalDamage : {_finalDamages}");
+            _target.IsHit(_finalDamages);
+        }
+        else
+        {
+            StartCoroutine(Move(_target.transform.position));
+        }
+    }
+
+    protected bool HasReach(Vector3 _selfPosition, Vector3 _targetPosition)
+    {
+        if (Vector3.Distance(_selfPosition,_targetPosition) <= (size+1))
+        {
+            return true;
+        }
+        else return false;
     }
 }
