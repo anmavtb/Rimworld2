@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class ControlsManager : Singleton<ControlsManager>
 {
@@ -50,14 +51,14 @@ public class ControlsManager : Singleton<ControlsManager>
                 case Plant:
                     Plant _plantHit = _result.transform.GetComponent<Plant>();
                     Debug.Log($"Plant {_plantHit}");
-                    _currentObjectSelected.Attack(_plantHit);
+                    StartCoroutine(_currentObjectSelected.MoveAndAttack(_plantHit, _result.point));
                     break;
                 case EntityMoving:
                     EntityMoving _entityHit = _result.transform.GetComponent<EntityMoving>();
                     Debug.Log($"Entité : {_entityHit}");
                     if (!(_entityHit.ObjectName == currentObjectSelected.ObjectName))
                     {
-                        _currentObjectSelected.Attack(_entityHit);
+                        StartCoroutine(_currentObjectSelected.MoveAndAttack(_entityHit, _result.point));
                     }
                     else
                     {
@@ -70,7 +71,7 @@ public class ControlsManager : Singleton<ControlsManager>
                     break;
                 default:
                     Debug.Log("Rien");
-                    StartCoroutine(_currentObjectSelected.Move(_result.point));
+                    _currentObjectSelected.Move(_result.point);
                     break;
             }
         }

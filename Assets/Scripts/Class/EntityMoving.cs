@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine.AI;
 using System.Collections;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EntityMoving : Entity
 {
@@ -20,6 +21,9 @@ public class EntityMoving : Entity
     [SerializeField][SerializedDictionary("Object", "Number")] protected SerializedDictionary<EntityObject, int> inventory;
 
     [SerializeField] protected NavMeshAgent agent;
+
+    [SerializeField] protected string TEST = "TEST";
+    [SerializeField] protected bool IsMoving;
 
     public string Species => species;
     public float Age => age;
@@ -39,24 +43,36 @@ public class EntityMoving : Entity
         Init();
     }
 
+    private void Update()
+    {
+        IsMoving = agent.pathPending || agent.remainingDistance > agent.stoppingDistance;
+    }
+
     protected void Init()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = size;
+        
     }
 
-    public IEnumerator Move(Vector3 _destination)
+    public void Move(Vector3 _destination)
     {
         agent.SetDestination(_destination);
-        Debug.Log(1);
-        Debug.Log($"pos : {this.transform.position} | dest : {agent.pathEndPosition} | stopdist : {agent.stoppingDistance}");
-        if (!agent.pathPending && DestinationReached(agent, _destination)) yield return new WaitForSeconds(10f);
+    }
+
+    public IEnumerator MoveAndAttack(GenericObject _target, Vector3 _targetPosition)
+    {
+        Move(_targetPosition);
+        yield return new WaitForSeconds(0.1f);
+        while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+        {
+            yield return null;
+        }
+        Attack(_target);
     }
 
     protected bool DestinationReached(NavMeshAgent _agent, Vector3 _destination)
     {
-        Debug.Log(2);
-        Debug.Log($"pos : {this.transform.position} | dest : {agent.pathEndPosition} | stopdist : {agent.stoppingDistance}");
         if (agent.pathPending)
         {
             return Vector3.Distance(this.transform.position, agent.pathEndPosition) <= agent.stoppingDistance;
@@ -69,6 +85,7 @@ public class EntityMoving : Entity
 
     public void Attack(GenericObject _target)
     {
+        Debug.Log(HasReach(this.transform.position, _target.transform.position));
         if (HasReach(this.transform.position, _target.transform.position))
         {
             float _random = (Random.value * Random.Range(-1f, 1f)) * 10;
@@ -76,15 +93,11 @@ public class EntityMoving : Entity
             Debug.Log($"random : {_random} | baseDamage : {baseDamage} | finalDamage : {_finalDamages}");
             _target.IsHit(_finalDamages);
         }
-        else
-        {
-            StartCoroutine(Move(_target.transform.position));
-        }
     }
 
     protected bool HasReach(Vector3 _selfPosition, Vector3 _targetPosition)
     {
-        if (Vector3.Distance(_selfPosition,_targetPosition) <= (size+1))
+        if (Vector3.Distance(_selfPosition,_targetPosition) <= (size+1.5))
         {
             return true;
         }
